@@ -4,12 +4,14 @@ import { listSongs } from './graphql/queries';
 import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
 import awsconfig from './aws-exports';
 import { AmplifySignOut, withAuthenticator } from '@aws-amplify/ui-react';
-import { Paper, IconButton } from '@material-ui/core';
+import { Paper, IconButton, TextField } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { updateSong } from './graphql/mutations';
 import PauseIcon from '@material-ui/icons/Pause';
 import ReactPlayer from 'react-player';
+import AddIcon from '@material-ui/icons/Add';
+import PublishIcon from '@material-ui/icons/Publish';
 
 Amplify.configure(awsconfig);
 
@@ -17,6 +19,7 @@ function App() {
   const [songs, setSongs] = useState([]);
   const [songPlaying, setSongPlaying] = useState('');
   const [audioURL, setAudioURL] = useState('');
+  const [showAddSong, setShowAddNewSong] = useState(false);
 
 
   const fetchSongs = async () => {
@@ -107,12 +110,41 @@ function App() {
                       />
                     </div>
                 ) : null}
+                
             </Paper>
         );
     })}
   </div>
+  {
+                  showAddSong ? <AddSong onUpload={() => 
+                    {
+                      setShowAddNewSong(false);
+                    }}/> 
+                    : 
+                    <IconButton  onClick={() => setShowAddNewSong(true)}> 
+                      <AddIcon /> 
+                    </IconButton>
+                }
   </>
   );
+}
+
+const AddSong = ({ onUpload }) => {
+  const uploadSong = async () => {
+    //Upload the song
+    onUpload();
+  };
+
+  return (
+      <div className="newSong">
+          <TextField label="Title" />
+          <TextField label="Artist" />
+          <TextField label="Description" />
+          <IconButton onClick={uploadSong}>
+                <PublishIcon />
+          </IconButton>
+      </div>
+  )
 }
 
 export default withAuthenticator(App);
