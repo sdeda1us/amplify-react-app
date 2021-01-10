@@ -9,6 +9,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { updateSong } from './graphql/mutations';
 import PauseIcon from '@material-ui/icons/Pause';
+import ReactPlayer from 'react-player';
 
 Amplify.configure(awsconfig);
 
@@ -95,6 +96,17 @@ function App() {
                     </div>
                     <div className="songDescription">{song.description}</div>
                 </div>
+                {songPlaying === idx ? (
+                  <div className="ourAudioPlayer">
+                      <ReactPlayer
+                          url={audioURL}
+                          controls
+                          playing
+                          height="50px"
+                          onPause={() => toggleSong(idx)}
+                      />
+                    </div>
+                ) : null}
             </Paper>
         );
     })}
